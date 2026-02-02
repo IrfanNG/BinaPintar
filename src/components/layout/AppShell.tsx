@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/auth/auth-context';
 import { LogOut } from 'lucide-react';
 
 // Pages that should NOT show sidebar/nav (auth pages)
-const AUTH_PATHS = ['/login', '/signup'];
+const AUTH_PATHS = ['/login', '/signup', '/forgot-password', '/reset-password'];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
