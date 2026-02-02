@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     setUser(session?.user ?? null);
 
                     if (session?.user) {
-                        await fetchUserRole(session.user.id);
+                        await fetchUserRole(session.user.id, session.user.email);
                     } else {
                         setLoading(false);
                     }
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setUser(session?.user ?? null);
 
                 if (session?.user) {
-                    await fetchUserRole(session.user.id);
+                    await fetchUserRole(session.user.id, session.user.email);
                 } else {
                     setRole(null);
                     setLoading(false);
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
     }, []);
 
-    const fetchUserRole = async (userId: string) => {
+    const fetchUserRole = async (userId: string, email?: string | null) => {
         console.log('AuthContext: fetchUserRole starting for', userId);
 
         // Timeout to prevent hanging indefinitely (3 seconds)
@@ -101,11 +101,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (error) {
                 console.warn('Fetch role error or timeout:', error.message);
+
                 // Fallback: If user is the specific admin email, grant admin to unblock them
-                if (user?.email === 'mnifanmohdariff@gmail.com') {
+                if (email === 'mnifanmohdariff@gmail.com') {
+                    console.log('AuthContext: Enforcing Admin role for hardcoded email');
                     setRole('admin');
                 } else {
-                    setRole('subcontractor');
+                    // Do not overwrite existing role if transient failure
+                    setRole(prev => prev || 'subcontractor');
                 }
                 setLoading(false);
                 return;
@@ -118,7 +121,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         } catch (error) {
             console.error('Exception fetching user role:', error);
-            setRole('subcontractor');
+            // On exception, only default if we have nothing
+            setRole(prev => prev || 'subcontractor');
         } finally {
             setLoading(false);
         }
