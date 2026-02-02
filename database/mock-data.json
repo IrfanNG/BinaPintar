@@ -1,0 +1,231 @@
+{
+    "user_profiles": [
+        {
+            "id": "11111111-1111-1111-1111-111111111111",
+            "email": "admin@binapintar.com",
+            "role": "admin",
+            "full_name": "Ahmad Razali",
+            "created_at": "2025-01-15T08:00:00Z"
+        },
+        {
+            "id": "22222222-2222-2222-2222-222222222222",
+            "email": "ali@contractor.my",
+            "role": "subcontractor",
+            "full_name": "Ali bin Hassan",
+            "created_at": "2025-01-20T10:30:00Z"
+        },
+        {
+            "id": "33333333-3333-3333-3333-333333333333",
+            "email": "farid@buildtech.my",
+            "role": "subcontractor",
+            "full_name": "Farid Ismail",
+            "created_at": "2025-02-01T09:15:00Z"
+        }
+    ],
+    "projects": [
+        {
+            "id": "aaaa1111-aaaa-1111-aaaa-111111111111",
+            "name": "Residensi Harmoni @ Setia Alam",
+            "status": "Active",
+            "start_date": "2025-01-10",
+            "end_date": "2025-12-31",
+            "created_at": "2025-01-10T08:00:00Z"
+        },
+        {
+            "id": "bbbb2222-bbbb-2222-bbbb-222222222222",
+            "name": "Menara Sentral KL",
+            "status": "Active",
+            "start_date": "2025-02-01",
+            "end_date": "2026-06-30",
+            "created_at": "2025-02-01T09:00:00Z"
+        },
+        {
+            "id": "cccc3333-cccc-3333-cccc-333333333333",
+            "name": "Taman Industri Puchong Fasa 2",
+            "status": "Active",
+            "start_date": "2024-11-01",
+            "end_date": "2025-08-15",
+            "created_at": "2024-11-01T10:00:00Z"
+        },
+        {
+            "id": "dddd4444-dddd-4444-dddd-444444444444",
+            "name": "Pusat Komuniti Ampang",
+            "status": "Completed",
+            "start_date": "2024-06-01",
+            "end_date": "2025-01-30",
+            "created_at": "2024-06-01T08:30:00Z"
+        }
+    ],
+    "permits": [
+        {
+            "id": "perm1111-1111-1111-1111-111111111111",
+            "project_id": "aaaa1111-aaaa-1111-aaaa-111111111111",
+            "doc_name": "Kelulusan Pelan Bangunan (PBT)",
+            "expiry_date": "2025-06-30",
+            "created_at": "2025-01-10T09:00:00Z"
+        },
+        {
+            "id": "perm2222-2222-2222-2222-222222222222",
+            "project_id": "aaaa1111-aaaa-1111-aaaa-111111111111",
+            "doc_name": "Lesen CIDB",
+            "expiry_date": "2025-03-15",
+            "created_at": "2025-01-10T09:30:00Z"
+        },
+        {
+            "id": "perm3333-3333-3333-3333-333333333333",
+            "project_id": "bbbb2222-bbbb-2222-bbbb-222222222222",
+            "doc_name": "Permit Kren Menara",
+            "expiry_date": "2025-02-28",
+            "created_at": "2025-02-01T10:00:00Z"
+        },
+        {
+            "id": "perm4444-4444-4444-4444-444444444444",
+            "project_id": "bbbb2222-bbbb-2222-bbbb-222222222222",
+            "doc_name": "Lesen Bomba",
+            "expiry_date": "2025-12-01",
+            "created_at": "2025-02-01T10:30:00Z"
+        },
+        {
+            "id": "perm5555-5555-5555-5555-555555555555",
+            "project_id": "cccc3333-cccc-3333-cccc-333333333333",
+            "doc_name": "Kelulusan Alam Sekitar (EIA)",
+            "expiry_date": "2025-04-10",
+            "created_at": "2024-11-01T11:00:00Z"
+        }
+    ],
+    "site_logs": [
+        {
+            "id": "log11111-1111-1111-1111-111111111111",
+            "project_id": "aaaa1111-aaaa-1111-aaaa-111111111111",
+            "supervisor_id": "11111111-1111-1111-1111-111111111111",
+            "description": "Kerja-kerja penyediaan tapak telah dimulakan. Perataan tanah 60% siap.",
+            "photo_url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800",
+            "metadata": {
+                "latitude": 3.1097,
+                "longitude": 101.5331,
+                "timestamp": "2025-01-15T08:30:00Z",
+                "device": "Samsung Galaxy S23"
+            },
+            "created_at": "2025-01-15T08:30:00Z"
+        },
+        {
+            "id": "log22222-2222-2222-2222-222222222222",
+            "project_id": "aaaa1111-aaaa-1111-aaaa-111111111111",
+            "supervisor_id": "11111111-1111-1111-1111-111111111111",
+            "description": "Pemasangan cerucuk (piling) blok A bermula hari ini. Kontraktor cerucuk hadir di tapak.",
+            "photo_url": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800",
+            "metadata": {
+                "latitude": 3.1099,
+                "longitude": 101.5330,
+                "timestamp": "2025-01-20T09:15:00Z",
+                "device": "iPhone 15 Pro"
+            },
+            "created_at": "2025-01-20T09:15:00Z"
+        },
+        {
+            "id": "log33333-3333-3333-3333-333333333333",
+            "project_id": "bbbb2222-bbbb-2222-bbbb-222222222222",
+            "supervisor_id": "11111111-1111-1111-1111-111111111111",
+            "description": "Pemasangan konkrit tingkat 5 selesai. Curing bermula esok.",
+            "photo_url": "https://images.unsplash.com/photo-1517089596392-fb9a9033e05b?w=800",
+            "metadata": {
+                "latitude": 3.1478,
+                "longitude": 101.6953,
+                "timestamp": "2025-02-01T16:00:00Z",
+                "device": "Samsung Galaxy S24 Ultra"
+            },
+            "created_at": "2025-02-01T16:00:00Z"
+        },
+        {
+            "id": "log44444-4444-4444-4444-444444444444",
+            "project_id": "cccc3333-cccc-3333-cccc-333333333333",
+            "supervisor_id": "11111111-1111-1111-1111-111111111111",
+            "description": "Kerja pendawaian elektrik bangunan kilang unit 3 sedang berjalan. Dijangka siap minggu depan.",
+            "photo_url": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800",
+            "metadata": null,
+            "created_at": "2025-01-28T14:45:00Z"
+        }
+    ],
+    "claims": [
+        {
+            "id": "clm11111-1111-1111-1111-111111111111",
+            "project_id": "aaaa1111-aaaa-1111-aaaa-111111111111",
+            "amount": 25000.00,
+            "description": "Pembayaran progres kerja tanah - 60% siap",
+            "status": "Paid",
+            "proof_url": "https://example.com/invoice-001.pdf",
+            "submitted_by": "22222222-2222-2222-2222-222222222222",
+            "approved_by": "11111111-1111-1111-1111-111111111111",
+            "created_at": "2025-01-18T10:00:00Z",
+            "updated_at": "2025-01-25T15:30:00Z"
+        },
+        {
+            "id": "clm22222-2222-2222-2222-222222222222",
+            "project_id": "aaaa1111-aaaa-1111-aaaa-111111111111",
+            "amount": 45000.00,
+            "description": "Pembelian besi tetulang untuk cerucuk blok A",
+            "status": "Approved",
+            "proof_url": "https://example.com/invoice-002.pdf",
+            "submitted_by": "22222222-2222-2222-2222-222222222222",
+            "approved_by": "11111111-1111-1111-1111-111111111111",
+            "created_at": "2025-01-22T11:30:00Z",
+            "updated_at": "2025-01-28T09:00:00Z"
+        },
+        {
+            "id": "clm33333-3333-3333-3333-333333333333",
+            "project_id": "bbbb2222-bbbb-2222-bbbb-222222222222",
+            "amount": 120000.00,
+            "description": "Sewa kren menara untuk tempoh Februari 2025",
+            "status": "Pending",
+            "proof_url": "https://example.com/invoice-003.pdf",
+            "submitted_by": "33333333-3333-3333-3333-333333333333",
+            "approved_by": null,
+            "created_at": "2025-02-01T14:00:00Z",
+            "updated_at": "2025-02-01T14:00:00Z"
+        },
+        {
+            "id": "clm44444-4444-4444-4444-444444444444",
+            "project_id": "cccc3333-cccc-3333-cccc-333333333333",
+            "amount": 18500.00,
+            "description": "Kos pemasangan pendawaian elektrik kilang unit 3",
+            "status": "Pending",
+            "proof_url": null,
+            "submitted_by": "22222222-2222-2222-2222-222222222222",
+            "approved_by": null,
+            "created_at": "2025-01-30T16:00:00Z",
+            "updated_at": "2025-01-30T16:00:00Z"
+        }
+    ],
+    "notifications": [
+        {
+            "id": "notif111-1111-1111-1111-111111111111",
+            "user_id": "11111111-1111-1111-1111-111111111111",
+            "type": "claim_update",
+            "title": "Tuntutan Baru Dihantar",
+            "message": "Ali bin Hassan telah menghantar tuntutan RM45,000 untuk projek Residensi Harmoni.",
+            "link": "/claims",
+            "is_read": false,
+            "created_at": "2025-01-22T11:30:00Z"
+        },
+        {
+            "id": "notif222-2222-2222-2222-222222222222",
+            "user_id": "11111111-1111-1111-1111-111111111111",
+            "type": "permit_expiry",
+            "title": "Permit Akan Tamat!",
+            "message": "Lesen CIDB untuk Residensi Harmoni akan tamat dalam 7 hari.",
+            "link": "/permits",
+            "is_read": false,
+            "created_at": "2025-03-08T08:00:00Z"
+        },
+        {
+            "id": "notif333-3333-3333-3333-333333333333",
+            "user_id": "22222222-2222-2222-2222-222222222222",
+            "type": "claim_update",
+            "title": "Tuntutan Diluluskan",
+            "message": "Tuntutan RM25,000 anda telah diluluskan dan dibayar.",
+            "link": "/subcontractor",
+            "is_read": true,
+            "created_at": "2025-01-25T15:30:00Z"
+        }
+    ]
+}
