@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
     LayoutDashboard, FolderKanban, FileWarning, HardHat,
-    Banknote, UserCircle, ClipboardList, Eye, LogOut
+    Banknote, UserCircle, ClipboardList, Eye, LogOut, BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth/auth-context';
@@ -35,6 +35,12 @@ const navItems: NavItem[] = [
         href: '/permits',
         icon: FileWarning,
         roles: ['admin', 'supervisor'],
+    },
+    {
+        title: 'Analytics',
+        href: '/admin',
+        icon: BarChart3,
+        roles: ['admin'],
     },
     {
         title: 'Claims Management',
