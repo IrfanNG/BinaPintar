@@ -24,7 +24,10 @@ interface AddSiteLogDialogProps {
     variant?: 'default' | 'outline';
 }
 
+import { useAuth } from '@/lib/auth/auth-context';
+
 export function AddSiteLogDialog({ projectId, variant = 'default' }: AddSiteLogDialogProps) {
+    const { role } = useAuth();
     const [open, setOpen] = useState(false);
     const [description, setDescription] = useState('');
     const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -33,6 +36,11 @@ export function AddSiteLogDialog({ projectId, variant = 'default' }: AddSiteLogD
     const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
+
+    // Only Admin and Supervisor can add logs
+    if (role !== 'admin' && role !== 'supervisor') {
+        return null;
+    }
 
     const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

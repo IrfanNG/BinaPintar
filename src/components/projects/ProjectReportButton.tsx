@@ -7,6 +7,8 @@ import type { Project, SiteLog, Permit } from '@/lib/supabase';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { useAuth } from '@/lib/auth/auth-context';
+
 interface ProjectReportButtonProps {
     project: Project;
     siteLogs: SiteLog[];
@@ -14,7 +16,13 @@ interface ProjectReportButtonProps {
 }
 
 export function ProjectReportButton({ project, siteLogs, permits }: ProjectReportButtonProps) {
+    const { role } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
+
+    // Only Admin and Supervisor can generate reports
+    if (role !== 'admin' && role !== 'supervisor') {
+        return null;
+    }
 
     const handleGenerate = async () => {
         setIsLoading(true);

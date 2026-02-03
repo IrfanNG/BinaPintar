@@ -1,10 +1,25 @@
 import { supabase, type Project } from '../supabase';
 
-export async function getProjects(): Promise<Project[]> {
-    const { data, error } = await supabase
+export async function getProjects(
+    filters?: {
+        userId?: string;
+        role?: string;
+    }
+): Promise<Project[]> {
+    let query = supabase
         .from('projects')
         .select('*')
         .order('created_at', { ascending: false });
+
+    // Apply filters based on role
+    if (filters?.role === 'client' && filters.userId) {
+        query = query.eq('client_id', filters.userId);
+    } else if (filters?.role === 'subcontractor' && filters.userId) {
+        query = query.contains('subcontractor_ids', [filters.userId]);
+    }
+    // Admin and Supervisor see all projects
+
+    const { data, error } = await query;
 
     if (error) {
         console.error('Error fetching projects:', error);

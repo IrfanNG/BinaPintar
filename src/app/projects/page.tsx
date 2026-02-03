@@ -1,3 +1,4 @@
+
 import { Suspense } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,20 +9,33 @@ import { AddProjectDialog } from '@/components/projects/AddProjectDialog';
 import type { Project } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
 
+
+import { supabase } from '@/lib/supabase';
+
+// Get current user server-side
+async function getCurrentUser() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return null;
+
+    // We need the role from user_profiles
+    const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
+    return {
+        id: session.user.id,
+        role: profile?.role
+    };
+}
+
 function ProjectCard({ project }: { project: Project }) {
     const startDate = new Date(project.start_date).toLocaleDateString('en-MY', {
         day: 'numeric',
         month: 'short',
         year: 'numeric',
     });
-
-    const endDate = project.end_date
-        ? new Date(project.end_date).toLocaleDateString('en-MY', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-        })
-        : 'Ongoing';
 
     return (
         <Link href={`/projects/${project.id}`}>
@@ -84,7 +98,15 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 async function ProjectsList() {
-    const projects = await getProjects();
+    const user = await getCurrentUser();
+
+    // Pass filtering context
+    const projects = await getProjects({
+        userId: user?.id,
+        role: user?.role
+    });
+
+    const canCreate = user?.role === 'admin' || user?.role === 'supervisor';
 
     if (projects.length === 0) {
         return (
@@ -96,9 +118,11 @@ async function ProjectsList() {
                         </div>
                         <h3 className="text-2xl font-bold text-slate-900 mb-2">No projects found</h3>
                         <p className="text-slate-500 max-w-md mx-auto mb-8">
-                            It looks like you haven't added any projects yet. Start by initializing a new construction site.
+                            {canCreate
+                                ? "It looks like you haven't added any projects yet. Start by initializing a new construction site."
+                                : "No projects have been assigned to you yet. Please contact your administrator."}
                         </p>
-                        <AddProjectDialog />
+                        {canCreate && <AddProjectDialog />}
                     </CardContent>
                 </Card>
             </div>
@@ -124,7 +148,7 @@ function LoadingSkeleton() {
     );
 }
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
     return (
         <div className="space-y-8">
             {/* Header */}

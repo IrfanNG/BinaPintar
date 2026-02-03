@@ -15,6 +15,8 @@ export interface Project {
   status: 'Active' | 'Completed';
   start_date: string;
   end_date: string | null;
+  client_id: string | null;
+  subcontractor_ids: string[];
   created_at: string;
 }
 

@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     Dialog,
@@ -13,17 +14,65 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Check, Plus, Loader2 } from 'lucide-react';
 import { createProject } from '@/lib/services/projects';
+import { getUsersByRole } from '@/lib/services/users';
+import type { UserProfile } from '@/lib/supabase';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+
+import { useAuth } from '@/lib/auth/auth-context';
 
 export function AddProjectDialog() {
+    const { role } = useAuth();
     const [open, setOpen] = useState(false);
     const [name, setName] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+
+    // Assignment states
+    const [clients, setClients] = useState<UserProfile[]>([]);
+    const [subcontractors, setSubcontractors] = useState<UserProfile[]>([]);
+    const [selectedClientId, setSelectedClientId] = useState<string>('');
+    const [selectedSubconIds, setSelectedSubconIds] = useState<string[]>([]);
+
     const [isLoading, setIsLoading] = useState(false);
+    const [isFetchingUsers, setIsFetchingUsers] = useState(false);
+
     const router = useRouter();
+
+    // Only Admin and Supervisor can create projects
+    if (role !== 'admin' && role !== 'supervisor') {
+        return null;
+    }
+
+    // Fetch users when dialog opens
+    useEffect(() => {
+        if (open) {
+            fetchAssignableUsers();
+        }
+    }, [open]);
+
+    const fetchAssignableUsers = async () => {
+        setIsFetchingUsers(true);
+        const [clientsData, subconsData] = await Promise.all([
+            getUsersByRole('client'),
+            getUsersByRole('subcontractor')
+        ]);
+        setClients(clientsData);
+        setSubcontractors(subconsData);
+        setIsFetchingUsers(false);
+    };
+
+    const toggleSubcon = (id: string) => {
+        setSelectedSubconIds(prev =>
+            prev.includes(id)
+                ? prev.filter(sid => sid !== id)
+                : [...prev, id]
+        );
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,6 +90,8 @@ export function AddProjectDialog() {
                 status: 'Active',
                 start_date: startDate,
                 end_date: endDate || null,
+                client_id: selectedClientId || null,
+                subcontractor_ids: selectedSubconIds,
             });
 
             if (result) {
@@ -49,6 +100,8 @@ export function AddProjectDialog() {
                 setName('');
                 setStartDate('');
                 setEndDate('');
+                setSelectedClientId('');
+                setSelectedSubconIds([]);
                 router.refresh();
             } else {
                 toast.error('Failed to create project');
@@ -69,11 +122,11 @@ export function AddProjectDialog() {
                     New Project
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md bg-white border-border">
+            <DialogContent className="sm:max-w-lg bg-white border-border max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="text-foreground">Create New Project</DialogTitle>
                     <DialogDescription className="text-muted-foreground">
-                        Initialize a new construction site project to track progress.
+                        Initialize a new construction site and assign stakeholders.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -111,7 +164,72 @@ export function AddProjectDialog() {
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-4">
+                    {/* Client Assignment */}
+                    <div className="space-y-2">
+                        <Label>Assign Client</Label>
+                        <Select value={selectedClientId} onValueChange={setSelectedClientId}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a client..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {clients.map((client) => (
+                                    <SelectItem key={client.id} value={client.id}>
+                                        {client.full_name || client.email}
+                                    </SelectItem>
+                                ))}
+                                {clients.length === 0 && (
+                                    <div className="p-2 text-sm text-muted-foreground">No clients found</div>
+                                )}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Subcontractor Assignment */}
+                    <div className="space-y-2">
+                        <Label>Assign Subcontractors</Label>
+                        <div className="border border-input rounded-md p-3 max-h-40 overflow-y-auto space-y-2">
+                            {isFetchingUsers ? (
+                                <div className="flex justify-center text-muted-foreground">Loading...</div>
+                            ) : subcontractors.length === 0 ? (
+                                <div className="text-sm text-muted-foreground">No subcontractors found</div>
+                            ) : (
+                                subcontractors.map((subcon) => (
+                                    <div
+                                        key={subcon.id}
+                                        className={cn(
+                                            "flex items-center gap-2 p-2 rounded cursor-pointer transition-colors border",
+                                            selectedSubconIds.includes(subcon.id)
+                                                ? "bg-primary/10 border-primary text-primary"
+                                                : "hover:bg-slate-50 border-transparent"
+                                        )}
+                                        onClick={() => toggleSubcon(subcon.id)}
+                                    >
+                                        <div className={cn(
+                                            "w-4 h-4 rounded border flex items-center justify-center",
+                                            selectedSubconIds.includes(subcon.id) ? "bg-primary border-primary text-white" : "border-slate-300"
+                                        )}>
+                                            {selectedSubconIds.includes(subcon.id) && <Check className="w-3 h-3" />}
+                                        </div>
+                                        <span className="text-sm font-medium">{subcon.full_name || subcon.email}</span>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                        {selectedSubconIds.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                                {selectedSubconIds.map(id => {
+                                    const sub = subcontractors.find(s => s.id === id);
+                                    return (
+                                        <Badge key={id} variant="secondary" className="text-xs">
+                                            {sub?.full_name || 'Unknown'}
+                                        </Badge>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-4 border-t border-border mt-6">
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                             Cancel
                         </Button>

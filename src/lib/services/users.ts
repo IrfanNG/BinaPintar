@@ -16,6 +16,21 @@ export async function getAllUsers(): Promise<UserProfile[]> {
     return data || [];
 }
 
+export async function getUsersByRole(role: UserRole): Promise<UserProfile[]> {
+    const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('role', role)
+        .order('full_name', { ascending: true });
+
+    if (error) {
+        console.error(`Error fetching ${role}s:`, error);
+        return [];
+    }
+
+    return data || [];
+}
+
 export async function updateUserRole(userId: string, newRole: UserRole): Promise<boolean> {
     const { error } = await supabase
         .from('user_profiles')
