@@ -22,13 +22,13 @@ const navItems: NavItem[] = [
         title: 'Dashboard',
         href: '/',
         icon: LayoutDashboard,
-        roles: ['admin', 'supervisor', 'client'], // Not subcontractor - they go to portal
+        roles: ['admin', 'supervisor'], // Removed client
     },
     {
         title: 'Projects',
         href: '/projects',
         icon: FolderKanban,
-        roles: ['admin', 'supervisor'],
+        roles: ['admin', 'supervisor', 'subcontractor'], // Added subcontractor
     },
     {
         title: 'Permits',
@@ -50,7 +50,7 @@ const navItems: NavItem[] = [
     },
     {
         title: 'Site Logs',
-        href: '/projects', // Supervisors go here to add logs
+        href: '/projects', // Supervisors use this main project view to access logs
         icon: ClipboardList,
         roles: ['supervisor'],
     },

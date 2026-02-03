@@ -18,8 +18,8 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-    { title: 'Home', href: '/', icon: LayoutDashboard, roles: ['admin', 'supervisor', 'client'] },
-    { title: 'Projects', href: '/projects', icon: FolderKanban, roles: ['admin', 'supervisor'] },
+    { title: 'Home', href: '/', icon: LayoutDashboard, roles: ['admin', 'supervisor'] },
+    { title: 'Projects', href: '/projects', icon: FolderKanban, roles: ['admin', 'supervisor', 'subcontractor'] },
     { title: 'Permits', href: '/permits', icon: FileWarning, roles: ['admin', 'supervisor'] },
     { title: 'Claims', href: '/claims', icon: Banknote, roles: ['admin'] },
     { title: 'My Claims', href: '/subcontractor', icon: UserCircle, roles: ['subcontractor'] },
