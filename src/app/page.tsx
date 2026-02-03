@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import { ProjectReportButton } from '@/components/projects/ProjectReportButton';
+import { WelcomeBanner } from '@/components/dashboard/WelcomeBanner';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FolderKanban, FileWarning, Calendar, ArrowRight, Activity, AlertTriangle } from 'lucide-react';
@@ -169,12 +171,7 @@ export default function DashboardPage() {
     <div className="space-y-10">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">Dashboard Overview</h1>
-          <p className="text-muted-foreground mt-1 font-medium">
-            Welcome back, Supervisor. Here's what's happening today.
-          </p>
-        </div>
+        <WelcomeBanner />
         <div className="text-sm text-muted-foreground font-semibold bg-white px-4 py-2 rounded-lg border border-border shadow-sm">
           {new Date().toLocaleDateString('en-MY', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
         </div>

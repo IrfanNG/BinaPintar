@@ -15,6 +15,7 @@ interface NavItem {
     href: string;
     icon: React.ComponentType<{ className?: string }>;
     roles: (UserRole | null)[];
+    exactMatch?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -22,13 +23,14 @@ const navItems: NavItem[] = [
         title: 'Dashboard',
         href: '/',
         icon: LayoutDashboard,
-        roles: ['admin', 'supervisor'], // Removed client
+        roles: ['admin', 'supervisor'],
+        exactMatch: true,
     },
     {
         title: 'Projects',
         href: '/projects',
         icon: FolderKanban,
-        roles: ['admin', 'supervisor', 'subcontractor'], // Added subcontractor
+        roles: ['admin', 'supervisor', 'subcontractor'],
     },
     {
         title: 'Permits',
@@ -41,6 +43,13 @@ const navItems: NavItem[] = [
         href: '/admin',
         icon: BarChart3,
         roles: ['admin'],
+        exactMatch: true,
+    },
+    {
+        title: 'User Management',
+        href: '/admin/users',
+        icon: UserCircle,
+        roles: ['admin'],
     },
     {
         title: 'Claims Management',
@@ -50,7 +59,7 @@ const navItems: NavItem[] = [
     },
     {
         title: 'Site Logs',
-        href: '/projects', // Supervisors use this main project view to access logs
+        href: '/projects',
         icon: ClipboardList,
         roles: ['supervisor'],
     },
@@ -74,11 +83,10 @@ export function Sidebar() {
 
     // Filter navigation based on user role
     const filteredNavItems = navItems.filter(item => {
-        if (!role) return false; // Hide nav if no role
+        if (!role) return false;
         return item.roles.includes(role);
     });
 
-    // Get role display name
     const getRoleDisplay = (r: UserRole | null) => {
         switch (r) {
             case 'admin': return 'Administrator';
@@ -108,8 +116,9 @@ export function Sidebar() {
                     Menu
                 </div>
                 {filteredNavItems.map((item) => {
-                    const isActive = pathname === item.href ||
-                        (item.href !== '/' && pathname.startsWith(item.href));
+                    const isActive = item.exactMatch
+                        ? pathname === item.href
+                        : pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
 
                     return (
                         <Link
