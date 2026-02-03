@@ -1,15 +1,24 @@
+
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Clock, ImageIcon } from 'lucide-react';
 import type { SiteLog } from '@/lib/supabase';
 import Image from 'next/image';
+import { SiteLogComments } from './SiteLogComments';
+import { useState } from 'react';
 
 interface SiteLogTimelineProps {
     siteLogs: SiteLog[];
 }
 
 export function SiteLogTimeline({ siteLogs }: SiteLogTimelineProps) {
+    const [openCommentsId, setOpenCommentsId] = useState<string | null>(null);
+
+    const toggleComments = (id: string) => {
+        setOpenCommentsId(current => current === id ? null : id);
+    };
+
     return (
         <div className="relative space-y-0">
             {/* Timeline line */}
@@ -73,9 +82,16 @@ export function SiteLogTimeline({ siteLogs }: SiteLogTimelineProps) {
                                 )}
 
                                 {/* Description */}
-                                <p className="text-sm text-foreground leading-relaxed">
+                                <p className="text-sm text-foreground leading-relaxed mb-4">
                                     {log.description}
                                 </p>
+
+                                {/* Comments Section */}
+                                <SiteLogComments
+                                    siteLogId={log.id}
+                                    isOpen={openCommentsId === log.id}
+                                    onToggle={() => toggleComments(log.id)}
+                                />
                             </CardContent>
                         </Card>
                     </div>

@@ -75,6 +75,15 @@ export interface UserProfile {
   created_at: string;
 }
 
+export interface Comment {
+  id: string;
+  site_log_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  user?: UserProfile;
+}
+
 // Role Permissions Map
 export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   admin: ['read_all', 'write_all', 'approve_claims', 'manage_users', 'delete_records'],
