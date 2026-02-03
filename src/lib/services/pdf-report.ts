@@ -40,24 +40,71 @@ export async function generateWeeklyReport(
     doc.setFontSize(14);
     doc.text('Site Progress Logs (Last 7 Days)', 14, 70);
 
-    const logData = siteLogs.map(log => [
+    // Pre-process logs to fetch images
+    const logsWithImages = await Promise.all(siteLogs.map(async (log) => {
+        let imageData = null;
+        if (log.photo_url) {
+            try {
+                imageData = await getBase64FromUrl(log.photo_url);
+            } catch (error) {
+                console.error('Failed to load image for PDF', error);
+            }
+        }
+        return {
+            ...log,
+            imageData
+        };
+    }));
+
+    const logData = logsWithImages.map(log => [
         new Date(log.created_at).toLocaleDateString(),
         log.description,
+        log.imageData, // This will be used in didDrawCell, not directly rendered text
         log.metadata?.latitude ? 'Location Verified' : 'Manual Entry'
     ]);
 
     autoTable(doc, {
         startY: 75,
-        head: [['Date', 'Description', 'Verification']],
+        head: [['Date', 'Description', 'Photo', 'Verification']],
         body: logData,
         headStyles: { fillColor: [3, 105, 161] }, // Sky-700
-        styles: { fontSize: 9 },
-        columnStyles: { 0: { cellWidth: 30 }, 2: { cellWidth: 35 } }
+        styles: { fontSize: 9, cellPadding: 2, minCellHeight: 20 },
+        columnStyles: {
+            0: { cellWidth: 25 },
+            1: { cellWidth: 70 },
+            2: { cellWidth: 40, minCellHeight: 30 }, // Photo column
+            3: { cellWidth: 35 }
+        },
+        didDrawCell: (data) => {
+            if (data.section === 'body' && data.column.index === 2) {
+                const imageData = data.cell.raw as string | null;
+                if (imageData) {
+                    const dim = data.cell.height - 4; // padding
+                    try {
+                        doc.addImage(imageData, 'JPEG', data.cell.x + 2, data.cell.y + 2, dim, dim);
+                    } catch (e) {
+                        // Fallback if image format issue
+                        console.error('Error adding image to PDF', e);
+                    }
+                } else {
+                    doc.setFontSize(8);
+                    doc.setTextColor(150);
+                    doc.text('No Photo', data.cell.x + 5, data.cell.y + 15);
+                }
+            }
+        },
+        didParseCell: (data) => {
+            // Clear text for photo cell so raw base64 doesn't print
+            if (data.section === 'body' && data.column.index === 2) {
+                data.cell.text = [];
+            }
+        }
     });
 
     // Upcoming Permits
     const finalY = (doc as any).lastAutoTable.finalY + 15;
     doc.setFontSize(14);
+    doc.setTextColor(0); // Reset color
     doc.text('Upcoming Permit Expirations', 14, finalY);
 
     const permitData = permits.map(permit => [
@@ -91,4 +138,26 @@ function getDaysRemaining(dateStr: string): number {
     const today = new Date();
     const diffTime = expiry.getTime() - today.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+
+async function getBase64FromUrl(url: string): Promise<string> {
+    try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (typeof reader.result === 'string') {
+                    resolve(reader.result);
+                } else {
+                    reject(new Error('Failed to convert blob to base64'));
+                }
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error('Error converting image to base64:', error);
+        throw error;
+    }
 }
