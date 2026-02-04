@@ -122,25 +122,41 @@ export default function ClientPortal() {
                             {projects.map((project) => (
                                 <div
                                     key={project.id}
-                                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition-colors"
+                                    className="p-4 border rounded-lg hover:bg-slate-50 transition-colors"
                                 >
-                                    <div className="flex-1">
-                                        <h4 className="font-semibold text-slate-900">{project.name}</h4>
-                                        <p className="text-sm text-muted-foreground">
-                                            Started: {new Date(project.start_date).toLocaleDateString()}
-                                            {project.end_date && ` • Target: ${new Date(project.end_date).toLocaleDateString()}`}
-                                        </p>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex-1">
+                                            <h4 className="font-semibold text-slate-900">{project.name}</h4>
+                                            <p className="text-sm text-muted-foreground">
+                                                Started: {new Date(project.start_date).toLocaleDateString()}
+                                                {project.end_date && ` • Target: ${new Date(project.end_date).toLocaleDateString()}`}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <Badge className={project.status === 'Active'
+                                                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-0'
+                                                : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-0'
+                                            }>
+                                                {project.status}
+                                            </Badge>
+                                            <Link href={`/projects/${project.id}`}>
+                                                <Button variant="outline" size="sm">View Details</Button>
+                                            </Link>
+                                        </div>
                                     </div>
+                                    {/* Progress Bar */}
                                     <div className="flex items-center gap-3">
-                                        <Badge className={project.status === 'Active'
-                                            ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-0'
-                                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-0'
-                                        }>
-                                            {project.status}
-                                        </Badge>
-                                        <Link href={`/projects/${project.id}`}>
-                                            <Button variant="outline" size="sm">View Details</Button>
-                                        </Link>
+                                        <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-300 ${project.progress_percent === 100 ? 'bg-emerald-500' : 'bg-primary'
+                                                    }`}
+                                                style={{ width: `${project.progress_percent || 0}%` }}
+                                            />
+                                        </div>
+                                        <span className={`text-sm font-bold min-w-[45px] text-right ${project.progress_percent === 100 ? 'text-emerald-600' : 'text-primary'
+                                            }`}>
+                                            {project.progress_percent || 0}%
+                                        </span>
                                     </div>
                                 </div>
                             ))}

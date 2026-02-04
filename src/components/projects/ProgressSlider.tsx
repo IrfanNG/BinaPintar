@@ -68,38 +68,41 @@ export function ProgressSlider({ projectId, initialProgress }: ProgressSliderPro
                         />
                     </div>
 
-                    {/* Stepper Controls */}
-                    <div className="flex items-center justify-center gap-6">
-                        <Button
-                            size="lg"
-                            variant="outline"
-                            onClick={() => handleProgressChange(progress - 5)}
-                            disabled={progress <= 0 || isReadOnly}
-                            className="h-12 w-12 rounded-full p-0"
-                        >
-                            <Minus className="w-5 h-5" />
-                        </Button>
-
-                        <div className="text-center min-w-[100px]">
-                            <span className={cn(
-                                "text-5xl font-bold block",
-                                progress === 100 ? "text-emerald-600" : "text-primary"
-                            )}>
-                                {progress}%
-                            </span>
-                            <span className="text-sm text-muted-foreground font-medium">Completed</span>
-                        </div>
-
-                        <Button
-                            size="lg"
-                            variant="outline"
-                            onClick={() => handleProgressChange(progress + 5)}
-                            disabled={progress >= 100 || isReadOnly}
-                            className="h-12 w-12 rounded-full p-0"
-                        >
-                            <Plus className="w-5 h-5" />
-                        </Button>
+                    {/* Percentage Display - Always visible */}
+                    <div className="text-center">
+                        <span className={cn(
+                            "text-5xl font-bold block",
+                            progress === 100 ? "text-emerald-600" : "text-primary"
+                        )}>
+                            {progress}%
+                        </span>
+                        <span className="text-sm text-muted-foreground font-medium">Completed</span>
                     </div>
+
+                    {/* Stepper Controls - Only for admin/supervisor */}
+                    {!isReadOnly && (
+                        <div className="flex items-center justify-center gap-4">
+                            <Button
+                                size="lg"
+                                variant="outline"
+                                onClick={() => handleProgressChange(progress - 5)}
+                                disabled={progress <= 0}
+                                className="h-12 w-12 rounded-full p-0"
+                            >
+                                <Minus className="w-5 h-5" />
+                            </Button>
+
+                            <Button
+                                size="lg"
+                                variant="outline"
+                                onClick={() => handleProgressChange(progress + 5)}
+                                disabled={progress >= 100}
+                                className="h-12 w-12 rounded-full p-0"
+                            >
+                                <Plus className="w-5 h-5" />
+                            </Button>
+                        </div>
+                    )}
 
                     {/* Save Button */}
                     {!isReadOnly && hasChanged && (
