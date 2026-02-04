@@ -33,9 +33,6 @@ export default function SubcontractorPortal() {
             <div className="flex flex-col gap-2 mb-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-bold tracking-tight text-slate-900">Sub-Contractor Portal</h1>
-                    <Button variant="outline" size="sm" onClick={() => signOut()}>
-                        Log Out
-                    </Button>
                 </div>
                 <p className="text-muted-foreground">
                     Welcome, <span className="font-medium text-slate-800">{user.user_metadata.full_name || user.email}</span>.

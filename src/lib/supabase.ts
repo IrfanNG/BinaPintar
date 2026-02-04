@@ -17,6 +17,7 @@ export interface Project {
   end_date: string | null;
   client_id: string | null;
   subcontractor_ids: string[];
+  progress_percent: number;
   created_at: string;
 }
 

@@ -46,20 +46,8 @@ async function AdminDashboardContent() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {projectProgress.map((project) => {
                                 const startDate = new Date(project.startDate);
-                                const endDate = project.endDate ? new Date(project.endDate) : null;
-                                const now = new Date();
-
-                                // Simple calculation for progress bar simulation
-                                // In a real app, this would be based on actual tasks completed or % set in DB
-                                let progress = 0;
-                                if (endDate) {
-                                    const totalDuration = endDate.getTime() - startDate.getTime();
-                                    const elapsed = now.getTime() - startDate.getTime();
-                                    progress = Math.min(Math.max(Math.round((elapsed / totalDuration) * 100), 0), 100);
-                                } else {
-                                    // If no end date, just assume some default 'active' progress or calculate based on start date age
-                                    progress = 25;
-                                }
+                                // Use the manually updated progress from DB
+                                const progress = project.progressPercent;
 
                                 return (
                                     <div key={project.id} className="p-4 border border-slate-100 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-colors">

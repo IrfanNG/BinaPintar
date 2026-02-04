@@ -214,6 +214,47 @@ async function SiteLogsSection({ projectId }: { projectId: string }) {
     );
 }
 
+import { supabase } from '@/lib/supabase';
+import { ProgressSlider } from '@/components/projects/ProgressSlider';
+
+// Helper to get current user server-side
+async function getCurrentUser() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return null;
+
+    const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
+    return {
+        id: session.user.id,
+        role: profile?.role
+    };
+}
+
+async function ProjectProgressSection({ projectId }: { projectId: string }) {
+    const [project, user] = await Promise.all([
+        getProject(projectId),
+        getCurrentUser()
+    ]);
+
+    if (!project) return null;
+
+    const canEdit = user?.role === 'admin' || user?.role === 'supervisor';
+
+    return (
+        <div className="grid gap-6">
+            <ProgressSlider
+                projectId={projectId}
+                initialProgress={project.progress_percent || 0}
+                readOnly={!canEdit}
+            />
+        </div>
+    );
+}
+
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
     const { id } = await params;
 
@@ -231,6 +272,11 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
             {/* Project Header */}
             <Suspense fallback={<div className="h-64 bg-white rounded-xl animate-pulse" />}>
                 <ProjectHeader projectId={id} />
+            </Suspense>
+
+            {/* Progress Section */}
+            <Suspense fallback={<div className="h-32 bg-white rounded-xl animate-pulse" />}>
+                <ProjectProgressSection projectId={id} />
             </Suspense>
 
             {/* Summary Stats */}

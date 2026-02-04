@@ -123,3 +123,20 @@ export async function createProject(project: Omit<Project, 'id' | 'created_at'>)
     console.log('✅ [DEBUG] Project created via RPC!');
     return rpcData as Project;
 }
+
+export async function updateProjectProgress(projectId: string, progress: number): Promise<boolean> {
+    // Validate range
+    const safeProgress = Math.min(Math.max(progress, 0), 100);
+
+    const { error } = await supabase
+        .from('projects')
+        .update({ progress_percent: safeProgress })
+        .eq('id', projectId);
+
+    if (error) {
+        console.error('Error updating project progress:', error);
+        return false;
+    }
+
+    return true;
+}

@@ -13,6 +13,7 @@ export interface ProjectProgress {
     status: 'Active' | 'Completed';
     startDate: string;
     endDate: string | null;
+    progressPercent: number;
 }
 
 export async function getFinancialSummary(): Promise<FinancialSummary> {
@@ -41,7 +42,7 @@ export async function getFinancialSummary(): Promise<FinancialSummary> {
 export async function getProjectProgressData(): Promise<ProjectProgress[]> {
     const { data: projects, error } = await supabase
         .from('projects')
-        .select('id, name, status, start_date, end_date')
+        .select('id, name, status, start_date, end_date, progress_percent')
         .eq('status', 'Active') // Focus on active projects for progress
         .order('start_date', { ascending: false });
 
@@ -56,6 +57,7 @@ export async function getProjectProgressData(): Promise<ProjectProgress[]> {
         status: p.status,
         startDate: p.start_date,
         endDate: p.end_date,
+        progressPercent: p.progress_percent || 0,
     }));
 }
 

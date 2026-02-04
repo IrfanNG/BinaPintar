@@ -45,7 +45,7 @@ export function PermitRiskList({ permits }: PermitRiskListProps) {
                         <p className="text-sm font-medium">No immediate risks detected</p>
                     </div>
                 ) : (
-                    <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                    <div className="space-y-3 max-h-[200px] overflow-y-auto pr-2">
                         {permits.map((permit) => {
                             const daysLeft = getDaysUntilExpiry(permit.expiry_date);
                             const isExpired = daysLeft < 0;
@@ -85,10 +85,10 @@ export function PermitRiskList({ permits }: PermitRiskListProps) {
                     </div>
                 )}
             </CardContent>
-            <div className="p-4 pt-0">
+            <div className="px-6 mt-auto">
                 <Link
                     href="/permits"
-                    className="text-xs text-center block w-full text-slate-500 hover:text-primary hover:underline"
+                    className="text-xs text-right block w-full text-slate-500 hover:text-primary hover:underline"
                 >
                     View all permits
                 </Link>
