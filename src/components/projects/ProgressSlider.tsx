@@ -1,44 +1,33 @@
 'use client';
 import { useState } from 'react';
-import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { updateProjectProgress } from '@/lib/services/projects';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Save } from 'lucide-react';
-import { cn } from '@/lib/utils'; // Assuming you have a cn utility
+import { Loader2, Save, Minus, Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/auth/auth-context';
 
 interface ProgressSliderProps {
     projectId: string;
     initialProgress: number;
-    readOnly?: boolean;
 }
 
-import { useAuth } from '@/lib/auth/auth-context';
-
-export function ProgressSlider({ projectId, initialProgress, readOnly: propReadOnly = false }: ProgressSliderProps) {
+export function ProgressSlider({ projectId, initialProgress }: ProgressSliderProps) {
     const { role, loading: authLoading } = useAuth();
     const [progress, setProgress] = useState(initialProgress);
     const [loading, setLoading] = useState(false);
     const [hasChanged, setHasChanged] = useState(false);
 
-    // Determine editability from client auth state
+    // Determine editability ONLY from client auth state (server prop is unreliable)
     const canEdit = role === 'admin' || role === 'supervisor';
-    const isReadOnly = propReadOnly || (!authLoading && !canEdit);
 
-    console.log('ProgressSlider Rendered:', {
-        projectId,
-        initialProgress,
-        propReadOnly,
-        role,
-        canEdit,
-        isReadOnly,
-        currentProgress: progress
-    });
+    // While auth is loading, assume editable (will be corrected once loaded)
+    const isReadOnly = authLoading ? false : !canEdit;
 
-    const handleValueChange = (value: number[]) => {
-        console.log('Slider value changing:', value);
-        setProgress(value[0]);
+    const handleProgressChange = (newValue: number) => {
+        const clampedValue = Math.min(Math.max(newValue, 0), 100);
+        setProgress(clampedValue);
         setHasChanged(true);
     };
 
@@ -68,65 +57,67 @@ export function ProgressSlider({ projectId, initialProgress, readOnly: propReadO
             </CardHeader>
             <CardContent>
                 <div className="space-y-6">
-                    <div className="flex items-end justify-between">
-                        <div className="space-y-1">
+                    {/* Progress Bar Visualization */}
+                    <div className="w-full h-3 bg-primary/20 rounded-full overflow-hidden">
+                        <div
+                            className={cn(
+                                "h-full rounded-full transition-all duration-300",
+                                progress === 100 ? "bg-emerald-500" : "bg-primary"
+                            )}
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+
+                    {/* Stepper Controls */}
+                    <div className="flex items-center justify-center gap-6">
+                        <Button
+                            size="lg"
+                            variant="outline"
+                            onClick={() => handleProgressChange(progress - 5)}
+                            disabled={progress <= 0 || isReadOnly}
+                            className="h-12 w-12 rounded-full p-0"
+                        >
+                            <Minus className="w-5 h-5" />
+                        </Button>
+
+                        <div className="text-center min-w-[100px]">
                             <span className={cn(
-                                "text-4xl font-bold block",
+                                "text-5xl font-bold block",
                                 progress === 100 ? "text-emerald-600" : "text-primary"
                             )}>
                                 {progress}%
                             </span>
                             <span className="text-sm text-muted-foreground font-medium">Completed</span>
                         </div>
+
+                        <Button
+                            size="lg"
+                            variant="outline"
+                            onClick={() => handleProgressChange(progress + 5)}
+                            disabled={progress >= 100 || isReadOnly}
+                            className="h-12 w-12 rounded-full p-0"
+                        >
+                            <Plus className="w-5 h-5" />
+                        </Button>
                     </div>
 
-                    <div className="space-y-4">
-                        <Slider
-                            disabled={isReadOnly || authLoading}
-                            value={[progress]}
-                            onValueChange={handleValueChange}
-                            max={100}
-                            step={5}
-                            className={cn("w-full transition-opacity duration-200", (isReadOnly || authLoading) && "cursor-not-allowed opacity-80")}
-                        />
-
-                        {/* Debug Fallback */}
-                        {!isReadOnly && (
-                            <div className="pt-2 opacity-50 hover:opacity-100 transition-opacity">
-                                <label className="text-xs text-muted-foreground block mb-1">Debug Control (Native Input):</label>
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    step="5"
-                                    value={progress}
-                                    onChange={(e) => handleValueChange([parseInt(e.target.value)])}
-                                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary"
-                                />
-                            </div>
-                        )}
-
-                        {!isReadOnly && (
-                            <div className="flex justify-end">
-                                <Button
-                                    size="sm"
-                                    onClick={handleSave}
-                                    disabled={!hasChanged || loading}
-                                    className={cn(
-                                        "transition-all duration-200",
-                                        hasChanged ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
-                                    )}
-                                >
-                                    {loading ? (
-                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    ) : (
-                                        <Save className="w-4 h-4 mr-2" />
-                                    )}
-                                    Save Update
-                                </Button>
-                            </div>
-                        )}
-                    </div>
+                    {/* Save Button */}
+                    {!isReadOnly && hasChanged && (
+                        <div className="flex justify-center pt-2">
+                            <Button
+                                onClick={handleSave}
+                                disabled={loading}
+                                className="min-w-[140px]"
+                            >
+                                {loading ? (
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                ) : (
+                                    <Save className="w-4 h-4 mr-2" />
+                                )}
+                                Save Update
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </CardContent>
         </Card>

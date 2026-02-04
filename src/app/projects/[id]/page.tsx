@@ -235,21 +235,15 @@ async function getCurrentUser() {
 }
 
 async function ProjectProgressSection({ projectId }: { projectId: string }) {
-    const [project, user] = await Promise.all([
-        getProject(projectId),
-        getCurrentUser()
-    ]);
+    const project = await getProject(projectId);
 
     if (!project) return null;
-
-    const canEdit = user?.role === 'admin' || user?.role === 'supervisor';
 
     return (
         <div className="grid gap-6">
             <ProgressSlider
                 projectId={projectId}
                 initialProgress={project.progress_percent || 0}
-                readOnly={!canEdit}
             />
         </div>
     );
