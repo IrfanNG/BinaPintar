@@ -92,6 +92,7 @@ export function AddProjectDialog() {
                 end_date: endDate || null,
                 client_id: selectedClientId || null,
                 subcontractor_ids: selectedSubconIds,
+                progress_percent: 0,
             });
 
             if (result) {
@@ -130,45 +131,48 @@ export function AddProjectDialog() {
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+                <form onSubmit={handleSubmit} className="space-y-5 pt-2">
                     <div className="space-y-2">
-                        <Label htmlFor="name">Project Name *</Label>
+                        <Label htmlFor="name" className="text-muted-foreground">Project Name *</Label>
                         <Input
                             id="name"
                             placeholder="e.g. Menara TRX Phase 2"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
+                            className="bg-muted/30 border-transparent focus:bg-white transition-colors"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="startDate">Start Date *</Label>
+                            <Label htmlFor="startDate" className="text-muted-foreground">Start Date *</Label>
                             <Input
                                 id="startDate"
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
                                 required
+                                className="bg-muted/30 border-transparent focus:bg-white transition-colors"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="endDate">Target Completion</Label>
+                            <Label htmlFor="endDate" className="text-muted-foreground">Target Completion</Label>
                             <Input
                                 id="endDate"
                                 type="date"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)}
+                                className="bg-muted/30 border-transparent focus:bg-white transition-colors"
                             />
                         </div>
                     </div>
 
                     {/* Client Assignment */}
                     <div className="space-y-2">
-                        <Label>Assign Client</Label>
+                        <Label className="text-muted-foreground">Assign Client</Label>
                         <Select value={selectedClientId} onValueChange={setSelectedClientId}>
-                            <SelectTrigger>
+                            <SelectTrigger className="bg-muted/30 border-transparent focus:bg-white transition-colors">
                                 <SelectValue placeholder="Select a client..." />
                             </SelectTrigger>
                             <SelectContent>
@@ -186,8 +190,8 @@ export function AddProjectDialog() {
 
                     {/* Subcontractor Assignment */}
                     <div className="space-y-2">
-                        <Label>Assign Subcontractors</Label>
-                        <div className="border border-input rounded-md p-3 max-h-40 overflow-y-auto space-y-2">
+                        <Label className="text-muted-foreground">Assign Subcontractors</Label>
+                        <div className="border border-border rounded-xl p-3 max-h-40 overflow-y-auto space-y-1 bg-muted/10">
                             {isFetchingUsers ? (
                                 <div className="flex justify-center text-muted-foreground">Loading...</div>
                             ) : subcontractors.length === 0 ? (
@@ -197,15 +201,15 @@ export function AddProjectDialog() {
                                     <div
                                         key={subcon.id}
                                         className={cn(
-                                            "flex items-center gap-2 p-2 rounded cursor-pointer transition-colors border",
+                                            "flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all duration-200",
                                             selectedSubconIds.includes(subcon.id)
-                                                ? "bg-primary/10 border-primary text-primary"
-                                                : "hover:bg-slate-50 border-transparent"
+                                                ? "bg-primary/5 text-primary"
+                                                : "hover:bg-slate-100 text-muted-foreground hover:text-foreground"
                                         )}
                                         onClick={() => toggleSubcon(subcon.id)}
                                     >
                                         <div className={cn(
-                                            "w-4 h-4 rounded border flex items-center justify-center",
+                                            "w-4 h-4 rounded border flex items-center justify-center transition-colors",
                                             selectedSubconIds.includes(subcon.id) ? "bg-primary border-primary text-white" : "border-slate-300"
                                         )}>
                                             {selectedSubconIds.includes(subcon.id) && <Check className="w-3 h-3" />}
@@ -216,11 +220,11 @@ export function AddProjectDialog() {
                             )}
                         </div>
                         {selectedSubconIds.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-2">
+                            <div className="flex flex-wrap gap-1.5 mt-2">
                                 {selectedSubconIds.map(id => {
                                     const sub = subcontractors.find(s => s.id === id);
                                     return (
-                                        <Badge key={id} variant="secondary" className="text-xs">
+                                        <Badge key={id} variant="secondary" className="text-xs font-normal">
                                             {sub?.full_name || 'Unknown'}
                                         </Badge>
                                     );
@@ -229,11 +233,11 @@ export function AddProjectDialog() {
                         )}
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-4 border-t border-border mt-6">
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                    <div className="flex justify-end gap-3 pt-4 border-t border-border/50 mt-6">
+                        <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={isLoading}>
+                        <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-white shadow-sm">
                             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Create Project
                         </Button>

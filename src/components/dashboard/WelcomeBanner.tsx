@@ -31,10 +31,10 @@ export function WelcomeBanner() {
     }
 
     return (
-        <div>
+        <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground tracking-tight">Dashboard Overview</h1>
-            <p className="text-muted-foreground mt-1 font-medium">
-                Welcome back, {getRoleDisplay(role)}. Here's what's happening today.
+            <p className="text-muted-foreground mt-2 font-medium">
+                Welcome back, <span className="text-foreground">{getRoleDisplay(role)}</span>. Here's what's happening today.
             </p>
         </div>
     );

@@ -50,12 +50,7 @@ export default function ClientPortal() {
     return (
         <div className="max-w-4xl mx-auto space-y-6 pb-20">
             <div className="flex flex-col gap-2 mb-6">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold tracking-tight text-slate-900">Client Portal</h1>
-                    <Button variant="outline" size="sm" onClick={() => signOut()}>
-                        Log Out
-                    </Button>
-                </div>
+                <h1 className="text-2xl font-bold tracking-tight text-slate-900">Client Portal</h1>
                 <p className="text-muted-foreground">
                     Welcome, <span className="font-medium text-slate-800">{user.user_metadata?.full_name || user.email}</span>.
                     View your project progress and payment status here.

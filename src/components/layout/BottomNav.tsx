@@ -19,7 +19,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
     { title: 'Home', href: '/', icon: LayoutDashboard, roles: ['admin', 'supervisor'] },
-    { title: 'Projects', href: '/projects', icon: FolderKanban, roles: ['admin', 'supervisor', 'subcontractor'] },
+    { title: 'Projects', href: '/projects', icon: FolderKanban, roles: ['admin', 'supervisor'] },
     { title: 'Permits', href: '/permits', icon: FileWarning, roles: ['admin', 'supervisor'] },
     { title: 'Claims', href: '/claims', icon: Banknote, roles: ['admin'] },
     { title: 'My Claims', href: '/subcontractor', icon: UserCircle, roles: ['subcontractor'] },
@@ -39,7 +39,7 @@ export function BottomNav() {
     if (!role) return null;
 
     return (
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-sidebar border-t border-sidebar-border shadow-2xl">
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-border shadow-lg safe-bottom">
             <div className="flex justify-around items-center h-16">
                 {filteredItems.map((item) => {
                     const isActive = pathname === item.href ||
@@ -50,17 +50,25 @@ export function BottomNav() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                'flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-lg transition-colors',
+                                'flex flex-col items-center justify-center gap-1 px-3 py-1 rounded-lg transition-all duration-200',
                                 isActive
                                     ? 'text-primary'
-                                    : 'text-sidebar-foreground/60 hover:text-sidebar-foreground'
+                                    : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
-                            <item.icon className={cn(
-                                'w-5 h-5',
-                                isActive && 'text-primary'
-                            )} />
-                            <span className="text-[10px] font-medium">{item.title}</span>
+                            <div className={cn(
+                                "p-1 rounded-lg transition-colors",
+                                isActive && "bg-primary/10"
+                            )}>
+                                <item.icon className={cn(
+                                    'w-5 h-5',
+                                    isActive && 'text-primary'
+                                )} />
+                            </div>
+                            <span className={cn(
+                                "text-[10px] font-medium transition-colors",
+                                isActive ? "text-primary font-semibold" : "text-muted-foreground"
+                            )}>{item.title}</span>
                         </Link>
                     );
                 })}

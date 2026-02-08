@@ -249,19 +249,15 @@ async function ProjectProgressSection({ projectId }: { projectId: string }) {
     );
 }
 
+import { ProjectBackButton } from '@/components/projects/ProjectBackButton';
+
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
     const { id } = await params;
 
     return (
         <div className="space-y-8 pb-20 md:pb-0">
             {/* Back Button */}
-            <Link
-                href="/projects"
-                className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors group"
-            >
-                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                Back to Projects List
-            </Link>
+            <ProjectBackButton />
 
             {/* Project Header */}
             <Suspense fallback={<div className="h-64 bg-white rounded-xl animate-pulse" />}>

@@ -47,12 +47,12 @@
 
 /* BinaPintar Modern Construction Theme - Light SaaS Style */
 :root {
-  --radius: 0.5rem;
-  /* rounded-lg */
+  /* rounded-lg -> rounded-2xl (16px) */
+  --radius: 1rem;
 
-  /* Construction SaaS Light Theme */
-  --background: #f8fafc;
-  /* slate-50 - Clean workspace background */
+  /* Construction SaaS Light Theme - Soft Industrial Minimalist */
+  --background: #f8f9fa;
+  /* Very light gray - Clean workspace background */
   --foreground: #0f172a;
   /* slate-900 - High legibility text */
 
@@ -64,21 +64,21 @@
   --popover-foreground: #0f172a;
 
   /* Brand Colors */
-  --primary: #0369a1;
-  /* sky-700 / Deep Blue - Trustworthy, professional */
+  --primary: #475569;
+  /* Slate Blue - Professional, calm */
   --primary-foreground: #ffffff;
 
-  --secondary: #e2e8f0;
-  /* slate-200 */
+  --secondary: #f1f5f9;
+  /* slate-100 */
   --secondary-foreground: #0f172a;
 
-  --muted: #f1f5f9;
-  /* slate-100 */
+  --muted: #f8fafc;
+  /* slate-50 */
   --muted-foreground: #64748b;
   /* slate-500 */
 
-  --accent: #f97316;
-  /* orange-500 - Safety Orange for highlights/actions */
+  --accent: #f59e0b;
+  /* amber-500 - Warn/Highlight but softer than orange */
   --accent-foreground: #ffffff;
 
   --destructive: #ef4444;
@@ -87,34 +87,34 @@
   --border: #e2e8f0;
   /* slate-200 - Subtle borders */
   --input: #e2e8f0;
-  --ring: #0369a1;
+  --ring: #475569;
   /* Matching primary */
 
-  /* Sidebar - Dark Navy Contrast */
-  --sidebar: #0f172a;
-  /* slate-900 */
-  --sidebar-foreground: #f8fafc;
-  /* slate-50 */
-  --sidebar-primary: #f97316;
-  /* Safety Orange active state */
+  /* Sidebar - Light & Clean */
+  --sidebar: #ffffff;
+  /* White */
+  --sidebar-foreground: #475569;
+  /* Slate Blue text */
+  --sidebar-primary: #475569;
+  /* Active state color */
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e293b;
-  /* slate-800 hover */
-  --sidebar-accent-foreground: #f8fafc;
-  --sidebar-border: #1e293b;
-  --sidebar-ring: #f97316;
+  --sidebar-accent: #f1f5f9;
+  /* slate-100 hover */
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #475569;
 
   /* Chart Colors */
-  --chart-1: #0369a1;
-  /* Blue */
-  --chart-2: #f97316;
-  /* Orange */
+  --chart-1: #475569;
+  /* Slate Blue */
+  --chart-2: #f59e0b;
+  /* Amber */
   --chart-3: #10b981;
   /* Emerald */
-  --chart-4: #f59e0b;
-  /* Amber */
-  --chart-5: #64748b;
+  --chart-4: #64748b;
   /* Slate */
+  --chart-5: #94a3b8;
+  /* Light Slate */
 }
 
 @layer base {

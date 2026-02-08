@@ -1,9 +1,10 @@
 
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Calendar, FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, Calendar, FileText, ArrowRight } from 'lucide-react';
 import type { Permit } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -85,14 +86,14 @@ export function PermitRiskList({ permits }: PermitRiskListProps) {
                     </div>
                 )}
             </CardContent>
-            <div className="px-6 mt-auto">
-                <Link
-                    href="/permits"
-                    className="text-xs text-right block w-full text-slate-500 hover:text-primary hover:underline"
-                >
-                    View all permits
-                </Link>
-            </div>
+            <CardFooter className="flex justify-end pt-4">
+                <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-primary">
+                    <Link href="/permits" className="flex items-center gap-1">
+                        View all permits
+                        <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Link>
+                </Button>
+            </CardFooter>
         </Card>
     );
 }
